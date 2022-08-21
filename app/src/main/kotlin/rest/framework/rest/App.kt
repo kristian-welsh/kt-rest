@@ -3,15 +3,9 @@
  */
 package rest.framework
 
-class Character(name: String) {
-	val name = name
-	get() = field
-}
-
 class Endpoint<T>(path: String){
 	private val PATH_START = "root/"
 	val path = PATH_START + path
-
 	lateinit var lamb: ()->Response<T>?
 	fun recieveGet(): Response<T>? {
 		if(::lamb.isInitialized)
@@ -23,20 +17,6 @@ class Endpoint<T>(path: String){
 	}
 }
 
-class WebClient {
-	val fakeRequest = "GET /character/1\n\n"
-	fun listen():Int? {
-		return null
-	}
-
-	fun respond(response: Response<Any>?) {
-		// 
-	}
-
-	fun stop() {
-
-	}
-}
 
 class HttpMethods(string: String) {
 	companion object {
@@ -45,9 +25,6 @@ class HttpMethods(string: String) {
 }
 
 class Request(rawData: Int?) {
-	val method:HttpMethods = HttpMethods.get
-	val path:String = ""
-	val pathParam: String? = ""
 }
 
 class Response<T>(public val char: T? = null) {
@@ -61,9 +38,10 @@ class Response<T>(public val char: T? = null) {
 	}
 }
 
-class WebServer(val path: String, val client: WebClient?) {
-	private val endpoints:MutableMap<String, Endpoint<Any>> = mutableMapOf()
+class WebClient {
+}
 
+class WebServer(val path: String, val client: WebClient?) {
 	fun start() {
 		//val incoming = client?.listen()
 		//val request = Request(incoming)
@@ -72,24 +50,13 @@ class WebServer(val path: String, val client: WebClient?) {
 	}
 	
 	fun <T> responseFor(request: Request?): Response<T>? {
-		return if(request != null) {
-			val endpoint: Endpoint<T>? = endpoints.get(request.path) as Endpoint<T> 
-			endpoint?.recieveGet()
-			Response<T>(null)
-		} else {
-			null
-		}
+		return null
 	}
 
 	fun addEndpoint(endpoint: Endpoint<Character>) {
-		endpoints.put(this.path + endpoint.path, endpoint as Endpoint<Any>)
 	}
 }
 
 fun main() {
-	val PATH_START = "/api/rest/v1.0/"
-    val server = WebServer(PATH_START, null)//HttpWebClient("8585"))
-	server.addEndpoint(Endpoint<Character>("character"))
-	server.start()
 }
 

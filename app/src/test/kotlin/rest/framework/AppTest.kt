@@ -2,6 +2,11 @@ package rest.framework
 
 import kotlin.test.*
 
+class Character(name: String) {
+	val name = name
+	get() = field
+}
+
 class EndpointTest {
 	@Test fun endpoint_responds_with_get_lambda_Response() {
 		val endpoint = Endpoint<Character>("character")
