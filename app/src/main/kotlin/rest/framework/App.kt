@@ -17,13 +17,13 @@ class Endpoint<T>(path: String){
 	private val PATH_START = "root/"
 	val path = PATH_START + path
 
-	val map: MutableMap<HttpMethod, ()->Response<*>?> = mutableMapOf()
+	val map: MutableMap<HttpMethod, ()->Response<*>> = mutableMapOf()
 
-	fun recieveGet(): Response<T>? {
+	fun recieveGet(): Response<T> {
 		return callLambdaFor(HttpMethod.get)
 	}
 
-	fun recievePost(): Response<String>? {
+	fun recievePost(): Response<String> {
 		return callLambdaFor(HttpMethod.post)
 	}
 	
@@ -31,11 +31,11 @@ class Endpoint<T>(path: String){
 		return callLambdaFor(HttpMethod.delete)
 	}
 	
-	fun get(lambda: ()->Response<T>? ) {
+	fun get(lambda: ()->Response<T> ) {
 		map.put(HttpMethod.get, lambda)
 	}
 
-	fun post(lambda: ()->Response<String>? ) {
+	fun post(lambda: ()->Response<String> ) {
 		map.put(HttpMethod.post, lambda)
 	}
 
@@ -55,13 +55,18 @@ class Request(rawData: Int?) {
 	// THIS IS REQUEST, NOT RESPONSE
 }
 
-class Response<T>(public val data: T? = null) {
-	val body = ""
+class Response<T>(public val payload: T? = null) {
+
+	fun body():String {
+		// serialize payload here
+		return ""
+	}
+
 	companion object {
-		fun <U> response201(message: U):Response<U>? {
+		fun <U> response201(message: U):Response<U> {
 			return Response(message)
 		}
-		fun <U> response200(character: U?):Response<U>? {
+		fun <U> response200(character: U?):Response<U> {
 			return Response(character)
 		}
 		fun response204(): Response<Unit> {
@@ -81,8 +86,8 @@ class WebServer(val path: String, val client: WebClient?) {
 		//client?.respond(response)
 	}
 	
-	fun <T> responseFor(request: Request?): Response<T>? {
-		return null
+	fun <T> responseFor(request: Request?): Response<T> {
+		return Response(null)
 	}
 
 	fun addEndpoint(endpoint: Endpoint<Character>) {

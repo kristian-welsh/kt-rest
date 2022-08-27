@@ -16,21 +16,22 @@ class EndpointTest {
 	}
 
 	@Test fun endpoint_responds_to_GET_request() {
-		endpoint.get({ Response.response200(Character("steve")) })
+		val char = Character("steve")
+		endpoint.get({ Response.response200(char) })
 
-		assertEquals(endpoint.recieveGet()?.data?.name, "steve")
+		assertEquals(endpoint.recieveGet().payload, char)
 	}
 
 	@Test fun endpoint_responds_to_POST_request() {
 		endpoint.post({ Response.response201("arbitrary string") })
 
-		assertEquals(endpoint.recievePost()?.data, "arbitrary string")
+		assertEquals(endpoint.recievePost().payload, "arbitrary string")
 	}
 
 	@Test fun endpoint_responds_to_DELETE_request() {
 		endpoint.delete({ Response.response204() })
 
-		assertEquals(endpoint.recieveDelete().body, "")
+		assertEquals(endpoint.recieveDelete().body(), "")
 	}
 }
 
