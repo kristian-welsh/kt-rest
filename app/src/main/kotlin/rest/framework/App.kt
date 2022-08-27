@@ -19,21 +19,24 @@ class Endpoint<T>(path: String){
 	val map: MutableMap<HttpMethod, ()->Response<*>?> = mutableMapOf()
 
 	fun recieveGet(): Response<T>? {
-		val lambda = map.get(HttpMethod.get) as ()->Response<T>
-		return lambda()
+		return callLambdaFor(HttpMethod.get)
 	}
 
 	fun recievePost(): Response<String>? {
-		val lambda = map.get(HttpMethod.post) as ()->Response<String>
-		return lambda()
+		return callLambdaFor(HttpMethod.post)
 	}
-
+	
 	fun get(lambda: ()->Response<T>? ) {
 		map.put(HttpMethod.get, lambda)
 	}
 
 	fun post(lambda: ()->Response<String>? ) {
 		map.put(HttpMethod.post, lambda)
+	}
+
+	private fun <A: Response<*>> callLambdaFor(method: HttpMethod): A {
+		val lambda = map.get(method) as ()->A
+		return lambda()
 	}
 }
 
