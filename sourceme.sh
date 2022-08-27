@@ -1,6 +1,6 @@
 function v() {
-	cd ./src/
-	vim test/kotlinl/rest/framework/*.kt main/kotlin/rest/framework/rest/*.kt
+	cd ./app/src/
+	vim test/kotlin/rest/framework/*.kt main/kotlin/rest/framework/*.kt
 }
 
 function test() {

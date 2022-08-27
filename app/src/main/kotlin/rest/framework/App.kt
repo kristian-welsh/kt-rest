@@ -6,14 +6,28 @@ package rest.framework
 class Endpoint<T>(path: String){
 	private val PATH_START = "root/"
 	val path = PATH_START + path
-	lateinit var lamb: ()->Response<T>?
+
+	lateinit var getLamb: ()->Response<T>?
+	lateinit var postLamb: ()->Response<String>?
+
 	fun recieveGet(): Response<T>? {
-		if(::lamb.isInitialized)
-			return lamb()
+		if(::getLamb.isInitialized)
+			return getLamb()
 		return null
 	}
+
+	fun recievePost(): Response<String>? {
+		if(::postLamb.isInitialized)
+			return postLamb()
+		return null
+	}
+
 	fun get(lamb: ()->Response<T>? ) {
-		this.lamb = lamb
+		this.getLamb = lamb
+	}
+
+	fun post(lamb: ()->Response<String>? ) {
+		this.postLamb = lamb
 	}
 }
 
@@ -27,7 +41,7 @@ class HttpMethods(string: String) {
 class Request(rawData: Int?) {
 }
 
-class Response<T>(public val char: T? = null) {
+class Response<T>(public val data: T? = null) {
 	companion object {
 		fun <U> response201(message: U):Response<U>? {
 			return Response(message)
