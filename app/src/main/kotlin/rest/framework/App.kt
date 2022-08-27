@@ -3,40 +3,40 @@
  */
 package rest.framework
 
+import kotlin.collections.*
+
+class HttpMethod(string: String) {
+	companion object {
+		val get = HttpMethod("get")
+		val post = HttpMethod("post")
+	}
+}
+
 class Endpoint<T>(path: String){
 	private val PATH_START = "root/"
 	val path = PATH_START + path
 
-	lateinit var getLamb: ()->Response<T>?
-	lateinit var postLamb: ()->Response<String>?
+	val map: MutableMap<HttpMethod, ()->Response<*>?> = mutableMapOf()
 
 	fun recieveGet(): Response<T>? {
-		if(::getLamb.isInitialized)
-			return getLamb()
-		return null
+		val lambda = map.get(HttpMethod.get) as ()->Response<T>
+		return lambda()
 	}
 
 	fun recievePost(): Response<String>? {
-		if(::postLamb.isInitialized)
-			return postLamb()
-		return null
+		val lambda = map.get(HttpMethod.post) as ()->Response<String>
+		return lambda()
 	}
 
-	fun get(lamb: ()->Response<T>? ) {
-		this.getLamb = lamb
+	fun get(lambda: ()->Response<T>? ) {
+		map.put(HttpMethod.get, lambda)
 	}
 
-	fun post(lamb: ()->Response<String>? ) {
-		this.postLamb = lamb
-	}
-}
-
-
-class HttpMethods(string: String) {
-	companion object {
-		val get = HttpMethods("get")
+	fun post(lambda: ()->Response<String>? ) {
+		map.put(HttpMethod.post, lambda)
 	}
 }
+
 
 class Request(rawData: Int?) {
 }
