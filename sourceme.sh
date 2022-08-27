@@ -6,3 +6,10 @@ function v() {
 function test() {
 	./gradlew test --stacktrace 2>&1 | less
 }
+
+function reauth() {
+	# start ssh agent in background
+	eval $(ssh-agent -s)
+	# tell it about my github identity (key ilnked to github account)
+	ssh-add ~/.ssh/github-keypair
+}
