@@ -9,6 +9,7 @@ class HttpMethod(string: String) {
 	companion object {
 		val get = HttpMethod("get")
 		val post = HttpMethod("post")
+		val delete = HttpMethod("delete")
 	}
 }
 
@@ -26,12 +27,20 @@ class Endpoint<T>(path: String){
 		return callLambdaFor(HttpMethod.post)
 	}
 	
+	fun recieveDelete(): Response<Unit> {
+		return callLambdaFor(HttpMethod.delete)
+	}
+	
 	fun get(lambda: ()->Response<T>? ) {
 		map.put(HttpMethod.get, lambda)
 	}
 
 	fun post(lambda: ()->Response<String>? ) {
 		map.put(HttpMethod.post, lambda)
+	}
+
+	fun delete(lambda: ()->Response<Unit> ) {
+		map.put(HttpMethod.delete, lambda)
 	}
 
 	private fun <A: Response<*>> callLambdaFor(method: HttpMethod): A {
@@ -41,16 +50,22 @@ class Endpoint<T>(path: String){
 }
 
 
+
 class Request(rawData: Int?) {
+	// THIS IS REQUEST, NOT RESPONSE
 }
 
 class Response<T>(public val data: T? = null) {
+	val body = ""
 	companion object {
 		fun <U> response201(message: U):Response<U>? {
 			return Response(message)
 		}
 		fun <U> response200(character: U?):Response<U>? {
 			return Response(character)
+		}
+		fun response204(): Response<Unit> {
+			return Response(null)
 		}
 	}
 }
